@@ -6,30 +6,59 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { ArrowUpIcon, ArrowDownIcon, MessageSquareIcon, PackageIcon, TruckIcon, SearchIcon, HomeIcon, TrendingUpIcon, PlusCircleIcon, DollarSignIcon, ClockIcon, BotIcon, SendIcon } from "lucide-react"
 
-const Comment = ({ comment }) => (
+interface CommentInterface{
+  id: number;
+    content: string;
+    author: string;
+    date: string;
+}
+interface AIResponseInterface {
+  title: string;
+  content: string;
+  references: {
+      title: string;
+      id: string;
+  }[];
+}
+interface CommentProps {
+  comment: {
+    id: number;
+    content: string;
+    author: string;
+    date: string;
+  };
+}
+interface ForumPostProps {
+  post: {
+    title: string;
+    content: string;
+    upvotes: number;
+    comments: CommentInterface[];
+  };
+}
+const Comment:React.FC<CommentProps> = ({ comment }) => (
   <div className="border-t border-gray-700 pt-2 mt-2">
     <p className="text-sm text-gray-400">{comment.content}</p>
     <p className="text-xs text-gray-500 mt-1">Posted by {comment.author} on {comment.date}</p>
   </div>
 )
 
-const ForumPost = ({ post: initialPost }) => {
+const ForumPost:React.FC<ForumPostProps> = ({ post: initialPost }) => {
   const [post, setPost] = useState(initialPost)
   const [newComment, setNewComment] = useState("")
   const [showAllComments, setShowAllComments] = useState(false)
 
-  const handleVote = (type) => {
+  const handleVote = (type: 'up' | 'down') => {
     setPost(prevPost => ({
       ...prevPost,
       upvotes: type === 'up' ? prevPost.upvotes + 1 : prevPost.upvotes - 1
     }))
   }
 
-  const handleAddComment = (e) => {
+  const handleAddComment = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (newComment.trim()) {
       const comment = {
@@ -112,36 +141,36 @@ const HomePage = () => (
     <h1 className="text-3xl font-bold mb-6 text-gray-100">Recent Discussions</h1>
     <div className="space-y-4">
       {[
-        {
-          title: "UPS vs FedEx for international B2B shipments",
-          content: "I'm looking to expand my business internationally and I'm torn between UPS and FedEx for B2B shipments. Any experiences or recommendations?",
-          upvotes: 24,
-          comments: [
-            { id: 1, content: "I've had great experiences with UPS for international shipments. Their tracking is top-notch.", author: "ShippingPro", date: "2023-06-15" },
-            { id: 2, content: "FedEx has better rates for heavier packages in my experience.", author: "LogisticsGuru", date: "2023-06-16" },
-            { id: 3, content: "It really depends on the specific countries you're shipping to. I'd recommend getting quotes for your most common routes.", author: "GlobalTrader", date: "2023-06-17" }
-          ],
-        },
-        {
-          title: "Best practices for reducing shipping damages",
-          content: "We've been experiencing an increase in shipping damages lately. What are some best practices you've implemented to reduce damages during transit?",
-          upvotes: 18,
-          comments: [
-            { id: 1, content: "Double boxing has significantly reduced our damage rates for fragile items.", author: "CarefulShipper", date: "2023-06-14" },
-            { id: 2, content: "We started using custom foam inserts and haven't looked back. It's a bit more expensive but worth it.", author: "QualityFirst", date: "2023-06-15" }
-          ],
-        },
-        {
-          title: "New USPS rates impact on small businesses",
-          content: "The new USPS rates are out. How are other small businesses adapting to these changes? Are you considering switching carriers?",
-          upvotes: 31,
-          comments: [
-            { id: 1, content: "We're looking into regional carriers for some of our shipments now. The USPS increases are hitting us hard.", author: "SmallBizOwner", date: "2023-06-13" },
-            { id: 2, content: "We've started offering local pickup options to offset some of the shipping costs.", author: "AdaptiveEntrepreneur", date: "2023-06-14" },
-            { id: 3, content: "Considering a switch to UPS SurePost for lighter packages. Anyone have experience with this?", author: "ShippingNewbie", date: "2023-06-15" }
-          ],
-        },
-      ].map((post, index) => (
+  {
+    title: "UPS vs FedEx for international B2B shipments",
+    content: "I'm looking to expand my business internationally and I'm torn between UPS and FedEx for B2B shipments. Any experiences or recommendations?",
+    upvotes: 24,
+    comments: [
+      { id: 1, content: "I've had great experiences with UPS for international shipments. Their tracking is top-notch.", author: "ShippingPro", date: "2023-06-15" },
+      { id: 2, content: "FedEx has better rates for heavier packages in my experience.", author: "LogisticsGuru", date: "2023-06-16" },
+      { id: 3, content: "It really depends on the specific countries you're shipping to. I'd recommend getting quotes for your most common routes.", author: "GlobalTrader", date: "2023-06-17" }
+    ],
+  },
+  {
+    title: "Best practices for reducing shipping damages",
+    content: "We've been experiencing an increase in shipping damages lately. What are some best practices you've implemented to reduce damages during transit?",
+    upvotes: 18,
+    comments: [
+      { id: 1, content: "Double boxing has significantly reduced our damage rates for fragile items.", author: "CarefulShipper", date: "2023-06-14" },
+      { id: 2, content: "We started using custom foam inserts and haven't looked back. It's a bit more expensive but worth it.", author: "QualityFirst", date: "2023-06-15" }
+    ],
+  },
+  {
+    title: "New USPS rates impact on small businesses",
+    content: "The new USPS rates are out. How are other small businesses adapting to these changes? Are you considering switching carriers?",
+    upvotes: 31,
+    comments: [
+      { id: 1, content: "We're looking into regional carriers for some of our shipments now. The USPS increases are hitting us hard.", author: "SmallBizOwner", date: "2023-06-13" },
+      { id: 2, content: "We've started offering local pickup options to offset some of the shipping costs.", author: "AdaptiveEntrepreneur", date: "2023-06-14" },
+      { id: 3, content: "Considering a switch to UPS SurePost for lighter packages. Anyone have experience with this?", author: "ShippingNewbie", date: "2023-06-15" }
+    ],
+  },
+].map((post, index) => (
         <ForumPost key={index} post={post} />
       ))}
     </div>
@@ -358,9 +387,9 @@ const DeliveryTimesPage = () => (
 const AIAssistant = () => {
   const [query, setQuery] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedPost, setSelectedPost] = useState(null)
+  const [selectedPost, setSelectedPost] = useState<AIResponseInterface | null>(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (query.trim()) {
       setIsLoading(true)
